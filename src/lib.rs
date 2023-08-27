@@ -27,3 +27,24 @@ impl Default for Dictionary {
         Dictionary::new()
     }
 }
+
+pub struct Game {
+    answer: String,
+    dictionary: Dictionary,
+}
+
+impl Game {
+    pub fn get_answer(&self) -> String {
+        self.answer.to_string()
+    }
+}
+
+impl Default for Game {
+    fn default() -> Self {
+        let dict = Dictionary::default();
+        Game {
+            answer: dict.get_random_word(),
+            dictionary: dict,
+        }
+    }
+}
