@@ -37,6 +37,10 @@ impl Game {
     pub fn get_answer(&self) -> String {
         self.answer.to_string()
     }
+
+    pub fn in_dictionary(&self, word: &str) -> bool {
+        self.dictionary.words.get(word).is_some()
+    }
 }
 
 impl Default for Game {

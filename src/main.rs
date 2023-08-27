@@ -12,11 +12,16 @@ fn main() {
             .read_line(&mut guess)
             .expect("Failed to read line...");
 
-        if answer == guess.trim() {
-            println!("You Win!");
-            break;
+        let trimmed_guess = guess.trim();
+        if game.in_dictionary(trimmed_guess) {
+            if answer == trimmed_guess {
+                println!("You Win!");
+                break;
+            } else {
+                println!("Not match world...");
+            }
         } else {
-            println!("Not match world...");
+            println!("Well... What's?");
         }
 
         guess.clear();
