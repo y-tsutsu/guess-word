@@ -1,8 +1,7 @@
-const WORDS: &str = include_str!("words.txt");
-
+use rand::seq::SliceRandom;
 use std::collections::{HashMap, HashSet};
 
-use rand::seq::SliceRandom;
+const WORDS: &str = include_str!("words.txt");
 
 pub const GUESS_LENGTH: usize = 5;
 pub const GUESS_MAX: usize = 6;
@@ -178,7 +177,7 @@ impl Default for Game {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd)]
 pub enum HitAccuracy {
     InRightPlace,
     InWord,
