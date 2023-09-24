@@ -2,6 +2,8 @@ use iced::alignment::Horizontal;
 use iced::text_input::TextInput;
 use iced::{Application, Column, Command, Element, Length, Text};
 
+use guess_word::*;
+
 #[derive(Debug, Default)]
 struct State {
     input: iced::text_input::State,
@@ -15,7 +17,9 @@ pub enum Message {
     Guess,
 }
 
+#[derive(Default)]
 pub struct GuessWord {
+    game: Game,
     state: State,
 }
 
@@ -25,12 +29,7 @@ impl Application for GuessWord {
     type Flags = ();
 
     fn new(_flags: ()) -> (GuessWord, Command<Self::Message>) {
-        (
-            GuessWord {
-                state: State::default(),
-            },
-            Command::none(),
-        )
+        (GuessWord::default(), Command::none())
     }
 
     fn title(&self) -> String {
@@ -43,6 +42,31 @@ impl Application for GuessWord {
                 self.state.input_value = value;
             }
             Message::Guess => {
+                let (status, result) = self.game.guess(&self.state.input_value);
+                match status {
+                    GameStatus::Won => {
+                        self.state.announce = "You Win!".to_string();
+                    }
+                    GameStatus::Lost => {
+                        self.state.announce =
+                            format!("You Lost! (answer:{})", self.game.get_answer().unwrap());
+                    }
+                    GameStatus::InProgress => match result {
+                        GuessResult::DuplicateGuess => {
+                            self.state.announce = "Duplicate Guess".to_string();
+                        }
+                        GuessResult::IncorrectLength => {
+                            self.state.announce = "Incorrect Length".to_string();
+                        }
+                        GuessResult::NotInDictionary => {
+                            self.state.announce = "Invalid word".to_string();
+                        }
+                        GuessResult::Valid => {
+                            self.state.announce.clear();
+                        }
+                        _ => (),
+                    },
+                }
                 self.state.input_value.clear();
             }
         }
